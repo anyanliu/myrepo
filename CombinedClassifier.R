@@ -9,7 +9,7 @@ library(e1071)
 library(randomForest)
 library(rpart)
 
-# 定义组合分类器函数
+# Define Function
 combined_classifier <- function(train_data, train_labels, test_data) {
   
   train_data <- as.data.frame(train_data)
