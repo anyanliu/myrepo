@@ -10,7 +10,7 @@ library(randomForest)
 library(rpart)
 
 # Define Function
-combined_classifier <- function(train_data, train_labels, test_data) {
+CombinedClassifier <- function(train_data, train_labels, test_data) {
   
   train_data <- as.data.frame(train_data)
   test_data <- as.data.frame(test_data)
@@ -56,3 +56,8 @@ combined_classifier <- function(train_data, train_labels, test_data) {
   
   return(combined_pred)
 }
+
+library(devtools)
+document()
+setwd('..')
+install('CombinedClassifier')
