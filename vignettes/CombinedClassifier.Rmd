@@ -16,7 +16,39 @@ knitr::opts_chunk$set(
 )
 
 library("CombiningClassifier")
+
+###test package
+set.seed(123)
+train_data <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
+train_labels <- sample(c(0, 1), 100, replace = TRUE)
+test_data <- data.frame(x1 = rnorm(20), x2 = rnorm(20))
+
+result1 <- CombiningClassifier(train_data, train_labels, test_data)
+result2 <- sample(c(0, 1), 20, replace = TRUE)  
+
+all.equal(result1, result2)
 ```
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+##efficiency
+install.packages("bench")
+library(bench)
+
+bench_result <- bench::mark(
+  CombinedClassifier(train_data, train_labels, test_data)
+)
+
+print(bench_result)
+
+```
+
+
 
 Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
 
