@@ -1,4 +1,4 @@
-#' Combined Classifier
+#' Combining Classifier
 #'
 #' Combines logistic regression and decision tree classifiers to predict classification labels.
 #' @param train_data A data frame for training the classifiers.
@@ -6,7 +6,7 @@
 #' @param test_data A data frame for testing the classifiers.
 #' @return A vector of predicted labels based on majority voting.
 #' @export
-CombinedClassifier <- function(train_data, train_labels, test_data) {
+CombiningClassifier <- function(train_data, train_labels, test_data) {
   # Ensure labels are factors
   train_labels <- as.factor(train_labels)
 
