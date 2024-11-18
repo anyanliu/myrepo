@@ -6,6 +6,8 @@
 # * https://r-pkgs.org/testing-design.html#sec-tests-files-overview
 # * https://testthat.r-lib.org/articles/special-files.html
 
+library(bench)
+
 test_that("CombiningClassifier works correctly", {
   # 模拟训练数据和测试数据
   set.seed(123)
@@ -24,6 +26,16 @@ test_that("CombiningClassifier works correctly", {
 
   # 使用all.equal()检查返回值是否仅包含0或1
   expect_true(isTRUE(all.equal(sort(unique(result)), c(0, 1))))
+
+  # 添加性能测试
+  performance <- bench::mark(
+    Combining = CombiningClassifier(train_data, train_labels, test_data),
+    iterations = 10
+  )
+  print(performance)
+
+  # 检查性能：确保运行时间在合理范围内（如每次小于100ms）
+  expect_true(median(performance$median) < 100e6)  # 单位为纳秒
 })
 
 test_that("CombiningClassifier handles larger datasets", {
@@ -44,6 +56,16 @@ test_that("CombiningClassifier handles larger datasets", {
 
   # 使用all.equal()检查返回值是否仅包含0或1
   expect_true(isTRUE(all.equal(sort(unique(result)), c(0, 1))))
+
+  # 添加性能测试
+  performance <- bench::mark(
+    Combining = CombiningClassifier(train_data, train_labels, test_data),
+    iterations = 5
+  )
+  print(performance)
+
+  # 检查性能：确保运行时间在合理范围内（如每次小于500ms）
+  expect_true(median(performance$median) < 500e6)  # 单位为纳秒
 })
 
 test_that("CombiningClassifier predictions are consistent", {
@@ -59,4 +81,15 @@ test_that("CombiningClassifier predictions are consistent", {
 
   # 使用all.equal()检查两次结果是否一致
   expect_true(isTRUE(all.equal(result1, result2)))
+
+  # 添加性能测试
+  performance <- bench::mark(
+    Run1 = CombiningClassifier(train_data, train_labels, test_data),
+    Run2 = CombiningClassifier(train_data, train_labels, test_data),
+    iterations = 10
+  )
+  print(performance)
+
+  # 确保两次运行的性能相似
+  expect_true(abs(median(performance$median[1] - performance$median[2])) < 50e6)  # 单位为纳秒
 })

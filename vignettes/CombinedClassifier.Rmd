@@ -17,17 +17,18 @@ knitr::opts_chunk$set(
 
 library("CombiningClassifier")
 
-###test package
-set.seed(123)
-train_data <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
-train_labels <- sample(c(0, 1), 100, replace = TRUE)
-test_data <- data.frame(x1 = rnorm(20), x2 = rnorm(20))
-
-result1 <- CombiningClassifier(train_data, train_labels, test_data)
-result2 <- sample(c(0, 1), 20, replace = TRUE)  
-
-all.equal(unname(result1), unname(result2))
 ```
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library("testthat")
+devtools::test()
+```
+
 
 
 ```{r setup, include = FALSE}
