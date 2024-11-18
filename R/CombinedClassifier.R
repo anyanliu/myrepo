@@ -1,16 +1,15 @@
-# existing package
-install.packages("caret")
-install.packages("e1071")
-install.packages("randomForest")
-install.packages("rpart")
-
-library(caret)
-library(e1071)
-library(randomForest)
-library(rpart)
-
 # Define Function
 CombinedClassifier <- function(train_data, train_labels, test_data) {
+  
+  # existing package
+  install.packages("caret")
+  install.packages("e1071")
+  install.packages("randomForest")
+  install.packages("rpart")
+  library(caret)
+  library(e1071)
+  library(randomForest)
+  library(rpart)
   
   train_data <- as.data.frame(train_data)
   test_data <- as.data.frame(test_data)
@@ -57,15 +56,8 @@ CombinedClassifier <- function(train_data, train_labels, test_data) {
   return(combined_pred)
 }
 
-library(devtools)
-document()
-setwd('..')
-install('CombinedClassifier')
-library(CombinedClassifier)
 
-setwd("path/to/CombinedClassifier")
-getwd()
-setwd("path/to/CombinedClassifier")
-devtools::document()
+
+
 
 
