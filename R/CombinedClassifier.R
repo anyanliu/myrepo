@@ -61,3 +61,11 @@ library(devtools)
 document()
 setwd('..')
 install('CombinedClassifier')
+library(CombinedClassifier)
+
+setwd("path/to/CombinedClassifier")
+getwd()
+setwd("path/to/CombinedClassifier")
+devtools::document()
+
+
