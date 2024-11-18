@@ -17,5 +17,5 @@ CombiningClassifier(train_data, train_labels, test_data)
 A vector of predicted labels based on majority voting.
 }
 \description{
-Combines logistic regression and decision tree classifiers to predict classification labels.
+Combines basic classifiers to predict classification labels.
 }

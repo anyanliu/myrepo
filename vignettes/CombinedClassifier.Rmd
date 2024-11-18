@@ -36,12 +36,12 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-##efficiency
-install.packages("bench")
-library(bench)
+###efficiency
+##install.packages("bench")
 
+library(bench)
 bench_result <- bench::mark(
-  CombinedClassifier(train_data, train_labels, test_data)
+  CombiningClassifier(train_data, train_labels, test_data)
 )
 
 print(bench_result)
