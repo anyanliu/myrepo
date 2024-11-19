@@ -1,13 +1,16 @@
+
 set.seed(123)
-train_data <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
-train_labels <- sample(c(0, 1), 100, replace = TRUE)
-test_data <- data.frame(x1 = rnorm(20), x2 = rnorm(20))
 
-# Load the required package
-library(CombiningClassifier)
+X <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
+y <- sample(c(0, 1), 100, replace = TRUE)
 
-# Run the classifier
-result <- CombiningClassifier(train_data, train_labels, test_data)
+result <- CombiningClassifier(X, y)
 
-# Display results
-print(result)
+cat("Estimated Coefficients:\n")
+print(result$coefficients)
+
+cat("\nFitted Probabilities (first 10):\n")
+print(head(result$fitted.values, 10))
+
+cat("\nNumber of Iterations:\n")
+print(result$iterations)

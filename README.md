@@ -9,23 +9,29 @@ testing my setup
 
 ## 简介
 
-`CombiningClassifier` combines multiple basic classifiers, such as Logistic Regression, SVM, Random Forest, Decision Tree. And use weighted vote method to get the classification label.
+`CombiningClassifier` is a function that implete Logistic.
 
 
 ---
 
 ## Get the package from Github
 install.packages("devtools")
-devtools::install_github("your_github_username/CombiningClassifier")
+devtools::install_github("anyanliu/CombiningClassifier")
 ---
 
 ###### Using Method
 library(CombiningClassifier)
-set.seed(123)
-train_data <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
-train_labels <- sample(c(0, 1), 100, replace = TRUE)
-test_data <- data.frame(x1 = rnorm(20), x2 = rnorm(20))
+set.seed(123)  
+X <- data.frame(
+  x1 = rnorm(100),  
+  x2 = rnorm(100)
+)
+y <- sample(c(0, 1), 100, replace = TRUE)  
 
-result <- CombiningClassifier(train_data, train_labels, test_data)
+library(CombiningClassifier)
+
+result <- CombiningClassifier(X, y)
+
 print(result)
+
 

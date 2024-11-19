@@ -1,4 +1,3 @@
-
 CombiningClassifier<- function(X, y, max_iter = 100, tol = 1e-6) {
 
   X <- as.matrix(cbind(Intercept = 1, X))

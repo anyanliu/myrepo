@@ -62,12 +62,13 @@ X <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
 y <- sample(c(0, 1), 100, replace = TRUE)
 
 performance_comparison <- bench::mark(
-  my_logistic = CombiningClassifier(X, y),
-  glm = glm(y ~ ., data = X, family = binomial),
+  my_logistic = CombiningClassifier(X, y)$fitted.values,
+  glm = fitted(glm(y ~ ., data = X, family = binomial)),
   iterations = 10
 )
-cat("\nPerformance comparison:\n")
+
 print(performance_comparison)
+
 
 ```
 
@@ -92,20 +93,10 @@ CombiningClassifier_result <- CombiningClassifier(X, y)
 glm_result <- glm(y ~ ., data = X, family = binomial)
 
 
-fitted_CombiningClassifier <- CombiningClassifier_result$fitted.values
+fitted_mylogistic <- CombiningClassifier_result$fitted.values
 fitted_glm <- fitted(glm_result)
 
-
-comparison_correctness <- all.equal(fitted_CombiningClassifier, fitted_glm, tolerance = 1e-4)
-cat("Comparison using all.equal():\n")
-print(comparison_correctness)
-
-
-
-
-
-
-
+all.equal(unname(fitted_mylogistic),unname(fitted_glm))
 
 ```
 
