@@ -28,3 +28,5 @@ CombiningClassifier<- function(X, y, max_iter = 100, tol = 1e-6) {
     iterations = i
   )
 }
+
+
