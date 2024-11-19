@@ -11,12 +11,57 @@ vignette: >
 
 ## 1. Introduction
 
-`CombiningClassifier` is an R function that implete Logistic.
+`CombiningClassifier` is an R function that implete Logistic.The `CombiningClassifier` function is a custom implementation of logistic regression using the iterative reweighted least squares (IRLS) method. This document demonstrates its purpose, usage, and comparison with R's built-in `glm()` function for logistic regression.
+
+The function computes:
+- Logistic regression coefficients.
+- Predicted probabilities for input data.
+- The number of iterations required to achieve convergence.
+
+---
+# Function Overview
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+CombiningClassifier<- function(X, y, max_iter = 100, tol = 1e-6) {
+
+  X <- as.matrix(cbind(Intercept = 1, X))
+  y <- as.vector(y)
+
+  beta <- rep(0, ncol(X))
+
+  for (i in 1:max_iter) {
+
+    p <- 1 / (1 + exp(-X %*% beta))
+
+    gradient <- t(X) %*% (y - p)
+    W <- diag(as.vector(p * (1 - p)))
+    hessian <- -t(X) %*% W %*% X
+
+    beta_new <- beta - solve(hessian) %*% gradient
+
+    if (max(abs(beta_new - beta)) < tol) {
+      beta <- beta_new
+      break
+    }
+    beta <- beta_new
+  }
+
+  list(
+    coefficients = beta,
+    fitted.values = as.vector(1 / (1 + exp(-X %*% beta))),
+    iterations = i
+  )
+}
+```
 
 
-## 2. Preparing Data
+## Preparing Data
 
 The first step is to create a synthetic dataset for demonstration.
+Generate a Binary Classification Dataset：
 ```{r data-preparation, echo=TRUE}
 
 # Simulating training and test datasets
@@ -31,7 +76,7 @@ y <- sample(c(0, 1), 100, replace = TRUE)
 
 
 
-## 3.Using Package
+##  Package Using Method
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -39,16 +84,15 @@ knitr::opts_chunk$set(
 )
 
 library(CombiningClassifier)
-
 result <- CombiningClassifier(X, y)
-# Display results
 print(result)
 
 ```
 
 
 
-## 4. Comparison efficiency
+##  Comparison efficiency with glm()
+The efficiency performance of CombiningClassifier can be compared to R's built-in glm() function:
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -74,7 +118,8 @@ print(performance_comparison)
 
 
 
-## 5. Comaprison correctness
+## 5. Comaprison correctness with glm()
+The correctness performance of CombiningClassifier can be compared to R's built-in glm() function:
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -102,7 +147,7 @@ all.equal(unname(fitted_mylogistic),unname(fitted_glm))
 
 
 
-## 6.Use testthat to do unit testing 
+## 6.Use testthat to do unit testing of CombiningClassifier
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -115,3 +160,9 @@ devtools::test()
 ```
 
 
+## Conclusion
+The CombiningClassifier function is a simple and effective implementation of logistic regression. While it may not replace optimized built-in functions like glm(), it provides a transparent and customizable way to understand how logistic regression works under the hood. The performance and predictions are comparable to glm(), as shown in the benchmarks and visualizations.
+
+For further enhancements:
+1. Add error handling for edge cases.
+2. Support regularization techniques like LASSO or Ridge.
