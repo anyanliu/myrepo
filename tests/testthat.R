@@ -6,7 +6,7 @@
 # * https://r-pkgs.org/testing-design.html#sec-tests-files-overview
 # * https://testthat.r-lib.org/articles/special-files.html
 
-test_that("my_logistic works correctly", {
+test_that("CombiningClassifier works correctly", {
   set.seed(123)
   X <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
   y <- sample(c(0, 1), 100, replace = TRUE)
@@ -29,7 +29,7 @@ test_that("my_logistic works correctly", {
   expect_true(result$converged)
 })
 
-test_that("my_logistic handles invalid inputs gracefully", {
+test_that("CombiningCLassifier handles invalid inputs gracefully", {
   set.seed(123)
   X <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
   y_invalid <- sample(1:3, 100, replace = TRUE)
@@ -40,7 +40,7 @@ test_that("my_logistic handles invalid inputs gracefully", {
   expect_error(my_logistic(X_mismatch, y), "X and y must have the same number of rows")
 })
 
-test_that("my_logistic produces consistent results", {
+test_that("CombiningClassifier produces consistent results", {
   set.seed(123)
   X <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
   y <- sample(c(0, 1), 100, replace = TRUE)

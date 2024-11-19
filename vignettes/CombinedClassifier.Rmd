@@ -11,7 +11,7 @@ vignette: >
 
 ## 1. Introduction
 
-`CombiningClassifier` is an R function that combines multiple machine learning classifiers (logistic regression, decision tree, random forest, SVM, and XgBoost) to provide robust predictions. This document demonstrates its usage, functionality, and performance.
+`CombiningClassifier` is an R function that implete Logistic.
 
 
 ## 2. Preparing Data
@@ -20,10 +20,16 @@ The first step is to create a synthetic dataset for demonstration.
 ```{r data-preparation, echo=TRUE}
 
 # Simulating training and test datasets
-set.seed(123)
-  X <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
-  y <- sample(c(0, 1), 100, replace = TRUE)
+set.seed(123)  
+X <- data.frame(
+  x1 = rnorm(100),  
+  x2 = rnorm(100)
+)
+y <- sample(c(0, 1), 100, replace = TRUE)  
+
 ```
+
+
 
 ## 3.Using Package
 ```{r setup, include = FALSE}
@@ -32,12 +38,9 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-# Load the required package
-library(my_logistic)
+library(CombiningClassifier)
 
-# Run the classifier
-result <- my_logistic(X,y)
-
+result <- CombiningClassifier(X, y)
 # Display results
 print(result)
 
@@ -53,23 +56,18 @@ knitr::opts_chunk$set(
 )
 
 library(bench)
-library(randomForest)
 
 set.seed(123)
-train_data <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
-train_labels <- sample(c(0, 1), 100, replace = TRUE)
-test_data <- data.frame(x1 = rnorm(20), x2 = rnorm(20))
+X <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
+y <- sample(c(0, 1), 100, replace = TRUE)
 
-performance <- bench::mark(
-  Combining = CombiningClassifier(train_data, train_labels, test_data),
-  Logistic = {
-    model <- glm(train_labels ~ ., data = train_data, family = binomial)
-    as.numeric(predict(model, test_data, type = "response") > 0.5)
-  },
+performance_comparison <- bench::mark(
+  my_logistic = CombiningClassifier(X, y),
+  glm = glm(y ~ ., data = X, family = binomial),
   iterations = 10
 )
-
-print(performance)
+cat("\nPerformance comparison:\n")
+print(performance_comparison)
 
 ```
 
@@ -82,43 +80,31 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-# 加载必要的包
-library(randomForest)
-library(rpart)
-library(e1071)
-library(class)
 
-# 模拟数据
 set.seed(123)
-train_data <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
-train_labels <- sample(c(0, 1), 100, replace = TRUE)
-test_data <- data.frame(x1 = rnorm(20), x2 = rnorm(20))
+X <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
+y <- sample(c(0, 1), 100, replace = TRUE)
 
-result1 <- CombiningClassifier(train_data, train_labels, test_data)
 
-# Logistic Regression
-  log_model <- glm(train_labels ~ ., data = train_data, family = binomial)
+CombiningClassifier_result <- CombiningClassifier(X, y)
 
-  # Decision Tree
-  tree_model <- rpart(train_labels ~ ., data = train_data, method = "class")
 
-  # Random Forest
-  rf_model <- randomForest(train_data, train_labels, ntree = 300, mtry = 2)
+glm_result <- glm(y ~ ., data = X, family = binomial)
 
-  # SVM
-  svm_model <- svm(train_labels ~ ., data = train_data, kernel = "radial", cost = 1, gamma = 0.1)
 
-  # predict
-  log_pred <- ifelse(predict(log_model, test_data, type = "response") > 0.5, 1, 0)
-  tree_pred <- as.numeric(as.character(predict(tree_model, test_data, type = "class")))
-  rf_pred <- as.numeric(predict(rf_model, test_data, type = "response"))
-  svm_pred <- as.numeric(predict(svm_model, test_data))
- 
+fitted_CombiningClassifier <- CombiningClassifier_result$fitted.values
+fitted_glm <- fitted(glm_result)
 
-all.equal(unname(result1), unname(log_pred))
-all.equal(unname(result1), unname(tree_pred))
-all.equal(unname(result1), unname(rf_pred))
-all.equal(unname(result1), unname(svm_pred))
+
+comparison_correctness <- all.equal(fitted_CombiningClassifier, fitted_glm, tolerance = 1e-4)
+cat("Comparison using all.equal():\n")
+print(comparison_correctness)
+
+
+
+
+
+
 
 
 ```
@@ -138,110 +124,3 @@ devtools::test()
 ```
 
 
-## 7.Key function code
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-
-CombiningClassifier <- function(train_data, train_labels, test_data) {
-
-  train_labels <- as.factor(train_labels)
-
-  library(rpart)
-  library(randomForest)
-  library(e1071)
-  library(class)
-  library(xgboost)
-
-  # Logistic Regression
-  log_model <- glm(train_labels ~ ., data = train_data, family = binomial)
-
-  # Decision Tree
-  tree_model <- rpart(train_labels ~ ., data = train_data, method = "class")
-
-  # Random Forest
-  rf_model <- randomForest(train_data, train_labels, ntree = 300, mtry = 2)
-
-  # SVM
-  svm_model <- svm(train_labels ~ ., data = train_data, kernel = "radial", cost = 1, gamma = 0.1)
-
-
-  # predict
-  log_pred <- ifelse(predict(log_model, test_data, type = "response") > 0.5, 1, 0)
-  tree_pred <- as.numeric(as.character(predict(tree_model, test_data, type = "class")))
-  rf_pred <- as.numeric(predict(rf_model, test_data, type = "response"))
-  svm_pred <- as.numeric(predict(svm_model, test_data))
-
-  # integrete
-  predictions <- data.frame(
-    Logistic = log_pred,
-    DecisionTree = tree_pred,
-    RandomForest = rf_pred,
-    SVM = svm_pred,
-  )
-
-  # weighted vote to generate result
-  weights <- c(0.2, 0.1, 0.4, 0.2, 0.4, 0.1)
-  combined_pred <- apply(predictions, 1, function(row) {
-    unique_vals <- unique(row)
-    weighted_votes <- sapply(unique_vals, function(val) sum(weights[row == val]))
-    unique_vals[which.max(weighted_votes)]
-  })
-
-  return(as.numeric(combined_pred))
-}
-
-
-```
-
-
-
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
-
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
-
-## Vignette Info
-
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
-```
-
-You can enable figure captions by `fig_caption: yes` in YAML:
-
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
