@@ -20,6 +20,7 @@ vignette: >
 
 The first step is to create a synthetic dataset for demonstration.
 ```{r data-preparation, echo=TRUE}
+
 # Simulating training and test datasets
 set.seed(123)
 train_data <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
