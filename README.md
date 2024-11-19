@@ -8,7 +8,7 @@ testing my setup
 
 ## 简介
 
-`CombiningClassifier` combines multiple basic classifiers, such as Logistic Regression, SVM, Random Forest, Decision Tree, XgBoost. And use weighted vote method to get the classification label.
+`CombiningClassifier` combines multiple basic classifiers, such as Logistic Regression, SVM, Random Forest, Decision Tree. And use weighted vote method to get the classification label.
 
 
 ---
