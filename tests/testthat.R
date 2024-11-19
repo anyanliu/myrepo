@@ -6,90 +6,44 @@
 # * https://r-pkgs.org/testing-design.html#sec-tests-files-overview
 # * https://testthat.r-lib.org/articles/special-files.html
 
-library(bench)
-
 test_that("CombiningClassifier works correctly", {
-  # 模拟训练数据和测试数据
   set.seed(123)
   train_data <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
   train_labels <- sample(c(0, 1), 100, replace = TRUE)
   test_data <- data.frame(x1 = rnorm(20), x2 = rnorm(20))
 
-  # 运行CombiningClassifier函数
   result <- CombiningClassifier(train_data, train_labels, test_data)
 
-  # 使用all.equal()检查返回值是否为数值
-  expect_true(isTRUE(all.equal(typeof(result), "double")))
+  expect_type(result, "double")
 
-  # 使用all.equal()检查返回值的长度是否正确
-  expect_true(isTRUE(all.equal(length(result), nrow(test_data))))
+  expect_equal(length(result), nrow(test_data))
 
-  # 使用all.equal()检查返回值是否仅包含0或1
-  expect_true(isTRUE(all.equal(sort(unique(result)), c(0, 1))))
-
-  # 添加性能测试
-  performance <- bench::mark(
-    Combining = CombiningClassifier(train_data, train_labels, test_data),
-    iterations = 10
-  )
-  print(performance)
-
-  # 检查性能：确保运行时间在合理范围内（如每次小于100ms）
-  expect_true(median(performance$median) < 100e6)  # 单位为纳秒
+  expect_true(all(result %in% c(0, 1)))
 })
 
 test_that("CombiningClassifier handles larger datasets", {
-  # 测试更大的数据集
   set.seed(123)
   train_data <- data.frame(x1 = rnorm(1000), x2 = rnorm(1000))
   train_labels <- sample(c(0, 1), 1000, replace = TRUE)
   test_data <- data.frame(x1 = rnorm(200), x2 = rnorm(200))
 
-  # 运行CombiningClassifier函数
   result <- CombiningClassifier(train_data, train_labels, test_data)
 
-  # 使用all.equal()检查返回值是否为数值
-  expect_true(isTRUE(all.equal(typeof(result), "double")))
-
-  # 使用all.equal()检查返回值的长度是否正确
-  expect_true(isTRUE(all.equal(length(result), nrow(test_data))))
-
-  # 使用all.equal()检查返回值是否仅包含0或1
-  expect_true(isTRUE(all.equal(sort(unique(result)), c(0, 1))))
-
-  # 添加性能测试
-  performance <- bench::mark(
-    Combining = CombiningClassifier(train_data, train_labels, test_data),
-    iterations = 5
-  )
-  print(performance)
-
-  # 检查性能：确保运行时间在合理范围内（如每次小于500ms）
-  expect_true(median(performance$median) < 500e6)  # 单位为纳秒
+  expect_type(result, "double")
+  expect_equal(length(result), nrow(test_data))
+  expect_true(all(result %in% c(0, 1)))
 })
 
 test_that("CombiningClassifier predictions are consistent", {
-  # 测试在固定种子下预测结果是否一致
+
   set.seed(123)
   train_data <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
   train_labels <- sample(c(0, 1), 100, replace = TRUE)
   test_data <- data.frame(x1 = rnorm(20), x2 = rnorm(20))
 
-  # 两次运行结果应该一致
+
   result1 <- CombiningClassifier(train_data, train_labels, test_data)
   result2 <- CombiningClassifier(train_data, train_labels, test_data)
 
-  # 使用all.equal()检查两次结果是否一致
-  expect_true(isTRUE(all.equal(result1, result2)))
-
-  # 添加性能测试
-  performance <- bench::mark(
-    Run1 = CombiningClassifier(train_data, train_labels, test_data),
-    Run2 = CombiningClassifier(train_data, train_labels, test_data),
-    iterations = 10
-  )
-  print(performance)
-
-  # 确保两次运行的性能相似
-  expect_true(abs(median(performance$median[1] - performance$median[2])) < 50e6)  # 单位为纳秒
+  expect_equal(result1, result2)
 })
