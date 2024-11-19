@@ -1,9 +1,9 @@
 Package: CombiningClassifier
 Title: Combining Classifier
 Version: 0.0.0.9000
-Authors@R: anyanliu<anyanliu@umich.edu>
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+Authors@R: c(
+    person("Anyan", "Liu", email = "anyan.liu@umich.edu", role = c("aut", "cre"))
+)
 Description: A Combining Classifier.
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
