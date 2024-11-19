@@ -46,7 +46,7 @@ print(result)
 ```
 
 
-## 4. Comparison correctness
+## 4. Comparison efficiency
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -64,19 +64,18 @@ test_data <- data.frame(x1 = rnorm(20), x2 = rnorm(20))
 performance <- bench::mark(
   Combining = CombiningClassifier(train_data, train_labels, test_data),
   Logistic = {
-  model <- glm(train_labels ~ ., data = train_data, family = binomial)
-  as.numeric(predict(model, test_data, type = "response") > 0.5)
-},
+    model <- glm(train_labels ~ ., data = train_data, family = binomial)
+    as.numeric(predict(model, test_data, type = "response") > 0.5)
+  },
   iterations = 10
 )
-
 
 print(performance)
 
 
 ```
 
-## 5. Comaprison efficiency
+## 5. Comaprison correctness
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -160,7 +159,7 @@ CombiningClassifier <- function(train_data, train_labels, test_data) {
     unique_vals[which.max(weighted_votes)]
   })
 
-  return(combined_pred)
+  return(as.numeric(combined_pred))
 }
 
 ```

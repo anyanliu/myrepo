@@ -59,5 +59,5 @@ CombiningClassifier <- function(train_data, train_labels, test_data) {
     unique_vals[which.max(weighted_votes)]
   })
 
-  return(combined_pred)
+  return(as.numeric(combined_pred))
 }
