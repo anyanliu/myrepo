@@ -52,6 +52,7 @@ Anyan Liu
 }
 \examples{
 set.seed(123)
+library(CombiningClassifier)
 X <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
 y <- sample(c(0, 1), 100, replace = TRUE)
 

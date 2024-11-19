@@ -9,7 +9,7 @@ testing my setup
 
 ## 简介
 
-`CombiningClassifier` is a function that implement Logistic. Because of my initial misunderstanding of the assignment problem, the function name may be ambiguous. But note that it is a function that implements a glm function. `CombiningClassifier` is a simple R package that implements logistic regression using an iterative reweighted least squares (IRLS) approach. The function computes the logistic regression coefficients, predicted probabilities, and the number of iterations required to achieve convergence.
+`CombiningClassifier` is a function that implement Logistic function glm(). Because of my initial misunderstanding of the assignment problem, the function name may be ambiguous. But note that it is a function that implements a glm function. `CombiningClassifier` is a simple R package that implements logistic regression using an iterative reweighted least squares (IRLS) approach. The function computes the logistic regression coefficients, predicted probabilities, and the number of iterations required to achieve convergence.
 
 ---
 ##Key feature
@@ -42,7 +42,7 @@ print(result)
 ---
 ## Example
 set.seed(123)
-
+library(CombiningClassifier)
 X <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
 y <- sample(c(0, 1), 100, replace = TRUE)
 

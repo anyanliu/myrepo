@@ -118,7 +118,7 @@ print(performance_comparison)
 
 
 
-## 5. Comaprison correctness with glm()
+##  Comaprison correctness with glm()
 The correctness performance of CombiningClassifier can be compared to R's built-in glm() function:
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
@@ -147,7 +147,7 @@ all.equal(unname(fitted_mylogistic),unname(fitted_glm))
 
 
 
-## 6.Use testthat to do unit testing of CombiningClassifier
+## Use testthat to do unit testing of CombiningClassifier
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -158,6 +158,23 @@ library(devtools)
 devtools::test()
 
 ```
+
+## Example
+set.seed(123)
+library(CombiningClassifier)
+X <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
+y <- sample(c(0, 1), 100, replace = TRUE)
+
+result <- CombiningClassifier(X, y)
+
+cat("Estimated Coefficients:\n")
+print(result$coefficients)
+
+cat("\nFitted Probabilities (first 10):\n")
+print(head(result$fitted.values, 10))
+
+cat("\nNumber of Iterations:\n")
+print(result$iterations)
 
 
 ## Conclusion
