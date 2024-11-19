@@ -11,7 +11,7 @@ test_that("CombiningClassifier works correctly", {
   X <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
   y <- sample(c(0, 1), 100, replace = TRUE)
 
-  result <- my_logistic(X, y)
+  result <- CombiningClassifier(X, y)
 
   expect_type(result, "list")
 
@@ -33,11 +33,11 @@ test_that("CombiningCLassifier handles invalid inputs gracefully", {
   set.seed(123)
   X <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
   y_invalid <- sample(1:3, 100, replace = TRUE)
-  expect_error(my_logistic(X, y_invalid), "y must be binary (0/1)")
+  expect_error(CombiningClassifier(X, y_invalid), "y must be binary (0/1)")
 
   X_mismatch <- data.frame(x1 = rnorm(50), x2 = rnorm(50))
   y <- sample(c(0, 1), 100, replace = TRUE)
-  expect_error(my_logistic(X_mismatch, y), "X and y must have the same number of rows")
+  expect_error(CombiningClassifier(X_mismatch, y), "X and y must have the same number of rows")
 })
 
 test_that("CombiningClassifier produces consistent results", {
@@ -45,8 +45,8 @@ test_that("CombiningClassifier produces consistent results", {
   X <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
   y <- sample(c(0, 1), 100, replace = TRUE)
 
-  result1 <- my_logistic(X, y)
-  result2 <- my_logistic(X, y)
+  result1 <- CombiningClassifier(X, y)
+  result2 <- CombiningClassifier(X, y)
 
   expect_equal(result1$coefficients, result2$coefficients)
 
