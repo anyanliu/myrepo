@@ -5,7 +5,7 @@
 Function to implement glm() function
 }
 \description{
-`CombiningClassifier` is an R function that implete Logistic.The `CombiningClassifier` function is a custom implementation of logistic regression using the iterative reweighted least squares (IRLS) method. This document demonstrates its purpose, usage, and comparison with R's built-in `glm()` function for logistic regression.
+`CombiningClassifier` is an R function that implement Logistic function glm().Because of my initial misunderstanding of the assignment problem, the function name may be ambiguous.But note that he `CombiningClassifier` function is a custom implementation of logistic regression using the iterative reweighted least squares (IRLS) method. This document demonstrates its purpose, usage, and comparison with R's built-in `glm()` function for logistic regression.
 
 }
 \usage{
