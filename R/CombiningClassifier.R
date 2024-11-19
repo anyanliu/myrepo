@@ -1,57 +1,56 @@
-#' Combining Classifier
+#' Logistic Regression Implementation
 #'
-#' Combines basic classifiers to predict classification labels.
-#' @param train_data A data frame for training the classifiers.
-#' @param train_labels A factor vector of labels for the training data.
-#' @param test_data A data frame for testing the classifiers.
-#' @return A vector of predicted labels based on majority voting.
+#' Implements logistic regression using iterative optimization (Newton-Raphson method).
+#' @param X A matrix or data frame of predictors (independent variables).
+#' @param y A binary vector (0/1) of outcomes (dependent variable).
+#' @param tol A numeric value specifying the convergence tolerance. Default is 1e-6.
+#' @param max_iter An integer specifying the maximum number of iterations. Default is 100.
+#' @return A list containing:
+#' \describe{
+#'   \item{coefficients}{A vector of estimated coefficients, including the intercept.}
+#'   \item{fitted.values}{A vector of predicted probabilities for each observation.}
+#'   \item{iterations}{The number of iterations taken to converge.}
+#'   \item{converged}{Logical, indicating whether the algorithm converged.}
+#' }
+#' @examples
+#' # Example data
+#' set.seed(123)
+#' X <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
+#' y <- sample(c(0, 1), 100, replace = TRUE)
+#'
+#' # Fit logistic regression
+#' result <- my_logistic(X, y)
+#' print(result$coefficients)
+#' print(result$fitted.values)
 #' @export
 
+my_logistic <- function(X, y, max_iter = 100, tol = 1e-6) {
 
-CombiningClassifier <- function(train_data, train_labels, test_data) {
+  X <- as.matrix(cbind(Intercept = 1, X))
+  y <- as.vector(y)
 
-  train_labels <- as.factor(train_labels)
+  beta <- rep(0, ncol(X))
 
-  library(rpart)
-  library(randomForest)
-  library(e1071)
-  library(class)
-  library(xgboost)
+  for (i in 1:max_iter) {
 
-  # Logistic Regression
-  log_model <- glm(train_labels ~ ., data = train_data, family = binomial)
+    p <- 1 / (1 + exp(-X %*% beta))
 
-  # Decision Tree
-  tree_model <- rpart(train_labels ~ ., data = train_data, method = "class")
+    gradient <- t(X) %*% (y - p)
+    W <- diag(as.vector(p * (1 - p)))
+    hessian <- -t(X) %*% W %*% X
 
-  # Random Forest
-  rf_model <- randomForest(train_data, train_labels, ntree = 300, mtry = 2)
+    beta_new <- beta - solve(hessian) %*% gradient
 
-  # SVM
-  svm_model <- svm(train_labels ~ ., data = train_data, kernel = "radial", cost = 1, gamma = 0.1)
+    if (max(abs(beta_new - beta)) < tol) {
+      beta <- beta_new
+      break
+    }
+    beta <- beta_new
+  }
 
-
-  # predict
-  log_pred <- ifelse(predict(log_model, test_data, type = "response") > 0.5, 1, 0)
-  tree_pred <- as.numeric(as.character(predict(tree_model, test_data, type = "class")))
-  rf_pred <- as.numeric(predict(rf_model, test_data, type = "response"))
-  svm_pred <- as.numeric(predict(svm_model, test_data))
-
-  # integrete
-  predictions <- data.frame(
-    Logistic = log_pred,
-    DecisionTree = tree_pred,
-    RandomForest = rf_pred,
-    SVM = svm_pred
+  list(
+    coefficients = beta,
+    fitted.values = as.vector(1 / (1 + exp(-X %*% beta))),
+    iterations = i
   )
-
-  # weighted vote to generate result
-  weights <- c(0.2, 0.1, 0.4, 0.2)
-  combined_pred <- apply(predictions, 1, function(row) {
-    unique_vals <- unique(row)
-    weighted_votes <- sapply(unique_vals, function(val) sum(weights[row == val]))
-    unique_vals[which.max(weighted_votes)]
-  })
-
-  return(as.numeric(combined_pred))
 }

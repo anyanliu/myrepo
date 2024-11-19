@@ -6,44 +6,49 @@
 # * https://r-pkgs.org/testing-design.html#sec-tests-files-overview
 # * https://testthat.r-lib.org/articles/special-files.html
 
-test_that("CombiningClassifier works correctly", {
+test_that("my_logistic works correctly", {
   set.seed(123)
-  train_data <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
-  train_labels <- sample(c(0, 1), 100, replace = TRUE)
-  test_data <- data.frame(x1 = rnorm(20), x2 = rnorm(20))
+  X <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
+  y <- sample(c(0, 1), 100, replace = TRUE)
 
-  result <- CombiningClassifier(train_data, train_labels, test_data)
+  result <- my_logistic(X, y)
 
-  expect_type(result, "double")
+  expect_type(result, "list")
 
-  expect_equal(length(result), nrow(test_data))
+  expect_true(all(c("coefficients", "fitted.values", "iterations", "converged") %in% names(result)))
 
-  expect_true(all(result %in% c(0, 1)))
+  expect_equal(length(result$coefficients), ncol(X) + 1)
+
+  expect_type(result$fitted.values, "double")
+
+  expect_equal(length(result$fitted.values), nrow(X))
+
+  expect_true(all(result$fitted.values >= 0 & result$fitted.values <= 1))
+
+  expect_type(result$converged, "logical")
+  expect_true(result$converged)
 })
 
-test_that("CombiningClassifier handles larger datasets", {
+test_that("my_logistic handles invalid inputs gracefully", {
   set.seed(123)
-  train_data <- data.frame(x1 = rnorm(1000), x2 = rnorm(1000))
-  train_labels <- sample(c(0, 1), 1000, replace = TRUE)
-  test_data <- data.frame(x1 = rnorm(200), x2 = rnorm(200))
+  X <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
+  y_invalid <- sample(1:3, 100, replace = TRUE)
+  expect_error(my_logistic(X, y_invalid), "y must be binary (0/1)")
 
-  result <- CombiningClassifier(train_data, train_labels, test_data)
-
-  expect_type(result, "double")
-  expect_equal(length(result), nrow(test_data))
-  expect_true(all(result %in% c(0, 1)))
+  X_mismatch <- data.frame(x1 = rnorm(50), x2 = rnorm(50))
+  y <- sample(c(0, 1), 100, replace = TRUE)
+  expect_error(my_logistic(X_mismatch, y), "X and y must have the same number of rows")
 })
 
-test_that("CombiningClassifier predictions are consistent", {
-
+test_that("my_logistic produces consistent results", {
   set.seed(123)
-  train_data <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
-  train_labels <- sample(c(0, 1), 100, replace = TRUE)
-  test_data <- data.frame(x1 = rnorm(20), x2 = rnorm(20))
+  X <- data.frame(x1 = rnorm(100), x2 = rnorm(100))
+  y <- sample(c(0, 1), 100, replace = TRUE)
 
+  result1 <- my_logistic(X, y)
+  result2 <- my_logistic(X, y)
 
-  result1 <- CombiningClassifier(train_data, train_labels, test_data)
-  result2 <- CombiningClassifier(train_data, train_labels, test_data)
+  expect_equal(result1$coefficients, result2$coefficients)
 
-  expect_equal(result1, result2)
+  expect_equal(result1$fitted.values, result2$fitted.values)
 })
