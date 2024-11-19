@@ -4,7 +4,8 @@ testing my setup
 
 # Package: CombiningClassifier
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/CombiningClassifier)](https://CRAN.R-project.org/package=CombiningClassifier)
+![R-CMD-check](https://github.com/anyanliu/myrepo/actions/workflows/R-CMD-check.yaml/badge.svg)
+
 
 ## 简介
 

@@ -1,10 +1,10 @@
 Package: CombiningClassifier
-Title: Combining Classifier
+Title: A package for Combining Classifier
 Version: 0.0.0.9000
-Authors@R: c(
-    person("Anyan", "Liu", email = "anyan.liu@umich.edu", role = c("aut", "cre"))
-)
-Description: A Combining Classifier.
+Authors@R: Anthea
+    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: What the package does (one paragraph).
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
@@ -13,11 +13,3 @@ RoxygenNote: 7.3.2
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-Imports:
-    randomForest,
-    e1071,
-    rpart,
-    class,
-    xgboost,
-    testthat
-
