@@ -9,7 +9,7 @@ testing my setup
 
 ## 简介
 
-`CombiningClassifier` is a function that implete Logistic.
+`CombiningClassifier` is a function that implement Logistic. Because of my initial misunderstanding of the assignment problem, the function name may be ambiguous. But note that it is a function that implements a glm function.
 
 
 ---
