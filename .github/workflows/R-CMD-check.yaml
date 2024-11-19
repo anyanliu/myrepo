@@ -40,3 +40,11 @@ jobs:
       - name: Run R CMD check
         run: R CMD check *tar.gz --no-manual
 
+steps:
+  - name: Install system dependencies (Ubuntu)
+    run: sudo apt-get install -y libcurl4-openssl-dev libxml2-dev
+  - name: Install system dependencies (macOS)
+    run: brew install libxml2
+  - name: Install system dependencies (Windows)
+    run: choco install openssl
+
